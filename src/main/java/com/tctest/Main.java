@@ -1,8 +1,8 @@
 package com.tctest;
 
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import freemarker.template.TemplateException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,15 +11,17 @@ import java.nio.file.Paths;
 
 public class Main {
 
-    public static void main(String[] args) throws UnirestException, URISyntaxException, IOException {
+    public static void main(String[] args) throws UnirestException, URISyntaxException, IOException, TemplateException {
 
-        String text = new String(Files.readAllBytes(Paths.get(Main.class.getResource("buildTemplate.json").toURI())));
+        String text = new String(Files.readAllBytes(Paths.get(Main.class.getResource("buildTemplate.ftl").toURI())));
         System.out.println(text);
-        JsonNode json = new JsonNode(text);
-        System.out.println(Unirest.get("https://teamcity.jetbrains.com/app/rest/buildTypes")
+        System.out.println(Unirest.post("http://localhost/app/rest/buildTypes")
                 .header("Accept", "application/json")
-
-                .basicAuth("sebostrass", "3MP56qcu")
+                .header("Content-Type", "application/json")
+                .basicAuth("admin", "3MP56qcu")
+                .body(JsonRequestBuilder.builder().buildId("Tctest4_Build").buildName("Build").projectId("Tctest4").projectName("Tctest4").buildJson())
                 .asString().getBody());
+
+
     }
 }

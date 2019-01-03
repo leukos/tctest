@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class GCDPropertyCombinationIterator implements PropertyCombinationIterator{
+public class GCDPropertyCombinationIterator implements PropertyCombinationIterator {
     private final Map<String, List<String>> possibleValues;
     private long currentConfiguration = 0;
     final private long maxConfigurations;
 
     public GCDPropertyCombinationIterator(Map<String, List<String>> possibleValues) {
         this.possibleValues = possibleValues;
-        maxConfigurations = possibleValues.values().stream().mapToLong(values -> values.size()).reduce((a,b ) -> a * b).orElse(0);
+        maxConfigurations = possibleValues.values().stream().mapToLong(values -> values.size()).reduce((a, b) -> a * b).orElse(0);
     }
 
     @Override

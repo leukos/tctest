@@ -7,19 +7,35 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class ParameterExtension implements BeforeTestExecutionCallback {
 
     /**
-     * Signals that the test execution is ran in distributed mode.
+     * Signals that the test execution is run in distributed mode.
      */
     private static boolean isDistributedMode() {
-        String distributedMode = System.getProperty("are.mode.distributed");
+        final String distributedMode = System.getProperty("are.mode.distributed");
         if (distributedMode != null && System.getProperty("are.mode.distributed").equals("true")) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Signals that the test execution is run in distributed mode.
+     */
+    private static Long getConfigurationNumber() {
+        final String configurationNumberString = System.getProperty("are.mode.distributed.number");
+        if (configurationNumberString != null) {
+            try {
+                return Long.valueOf(configurationNumberString);
+            } catch (NumberFormatException e) {
+                // do nothing
+            }
+        }
+        return null;
     }
 
     private static Map<String, List<String>> getTemplateParameters(Method method) {
@@ -37,6 +53,10 @@ public class ParameterExtension implements BeforeTestExecutionCallback {
         if (isDistributedMode()) {
             System.out.println("Running in distributed mode ...");
             System.out.println("Retrieving parameters from system properties.");
+            PropertyCombinationIterator combinationIterator = new GCDPropertyCombinationIterator(templateParams);
+
+            Properties props = combinationIterator.getSpecificConfiguration(getConfigurationNumber());
+            // TODO: execute with the properties.
         }
 
         PropertyCombinationIterator combinationIterator = new GCDPropertyCombinationIterator(templateParams);
