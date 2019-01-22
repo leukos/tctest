@@ -11,6 +11,7 @@ public class MainTest {
             @TemplateParam(name = "test1", values = {"1", "2"}),
             @TemplateParam(name = "test2", values = {"3", "4"})
     })
+
     @Test
     public void test() {
         Assertions.assertTrue(true);

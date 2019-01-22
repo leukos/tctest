@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import static com.tctest.util.Util.getTemplateParameters;
+
 public class ParameterExtension implements BeforeTestExecutionCallback {
 
     /**
@@ -38,13 +40,6 @@ public class ParameterExtension implements BeforeTestExecutionCallback {
         return null;
     }
 
-    private static Map<String, List<String>> getTemplateParameters(Method method) {
-        return Arrays.stream(method
-                .getAnnotation(TemplateParams.class)
-                .value())
-                .collect(Collectors.toMap(TemplateParam::name, (param) -> Arrays.asList(param.values())));
-    }
-
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) {
         Method testMethod = extensionContext.getTestMethod().orElseThrow(() -> new IllegalArgumentException("Test method must be defined."));
@@ -55,7 +50,7 @@ public class ParameterExtension implements BeforeTestExecutionCallback {
             System.out.println("Retrieving parameters from system properties.");
             PropertyCombinationIterator combinationIterator = new GCDPropertyCombinationIterator(templateParams);
 
-            Properties props = combinationIterator.getSpecificConfiguration(getConfigurationNumber());
+            Map<String, String> props = combinationIterator.getSpecificConfiguration(getConfigurationNumber());
             // TODO: execute with the properties.
         }
 

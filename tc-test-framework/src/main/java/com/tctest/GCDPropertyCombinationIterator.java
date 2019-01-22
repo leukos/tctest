@@ -1,5 +1,6 @@
 package com.tctest;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -23,13 +24,23 @@ public class GCDPropertyCombinationIterator implements PropertyCombinationIterat
     }
 
     @Override
-    public Properties next() {
+    public Map<String, String> next() {
         return getSpecificConfiguration(currentConfiguration++);
     }
 
     @Override
-    public Properties getSpecificConfiguration(final long configuration) {
-        final Properties properties = new Properties();
+    public long getNumberOfPossibleConfigurations() {
+        return maxConfigurations;
+    }
+
+    @Override
+    public long getCurrentConfiguration() {
+        return currentConfiguration;
+    }
+
+    @Override
+    public Map<String, String> getSpecificConfiguration(final long configuration) {
+        final Map<String, String> properties = new HashMap<>();
         long remainder = configuration;
         for (String name : possibleValues.keySet()) {
             final int size = possibleValues.get(name).size();

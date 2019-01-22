@@ -1,12 +1,8 @@
 package com.tctest;
 
 import com.mashape.unirest.http.JsonNode;
-import freemarker.template.*;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class JsonRequestBuilder {
@@ -32,21 +28,8 @@ public class JsonRequestBuilder {
         return this;
     }
 
-    public JsonNode buildJson() throws IOException, TemplateException {
-        Configuration cfg = new Configuration();
-        cfg.setClassForTemplateLoading(this.getClass(), "/");
-
-        cfg.setIncompatibleImprovements(new Version(2, 3, 20));
-        cfg.setDefaultEncoding("UTF-8");
-        cfg.setLocale(Locale.US);
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-
-        Template template = cfg.getTemplate("buildTemplate.ftl");
-        StringWriter writer = new StringWriter();
-        template.process(values, writer);
-
-        JsonNode node = new JsonNode(writer.toString());
-        writer.close();
+    public JsonNode buildJson() {
+        JsonNode node = new JsonNode("");
         return node;
     }
 
